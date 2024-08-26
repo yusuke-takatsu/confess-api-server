@@ -1,6 +1,6 @@
 ## confess
 
-ShareMoneyのAPIサーバーのリポジトリです。
+confessのAPIサーバーのリポジトリです。
 
 ## 環境
 
@@ -31,6 +31,3 @@ docker compose up -d
 ```
 docker compose exec -it app bin/bash
 ```
-
-
-※準備中
