@@ -13,8 +13,7 @@ class RegisterTest extends TestCase
 
     public function test_suucess(): void
     {
-        $response = $this->withHeaders(['referer' => 'http://localhost:3000'])
-          ->post(route('register'), [
+        $response = $this->post(route('register'), [
               'email' => 'test@example.com',
               'password' => 'password',
           ]);
@@ -28,8 +27,7 @@ class RegisterTest extends TestCase
     {
         $user = User::factory()->create();
 
-        $response = $this->withHeaders(['referer' => 'http://localhost:3000'])
-          ->post(route('register'), [
+        $response = $this->post(route('register'), [
               'email' => $user->email,
               'password' => 'password',
           ]);
