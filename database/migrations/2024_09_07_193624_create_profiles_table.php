@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('user_id')->constrained('users')->comment('ユーザーID');
             $table->string('name')->comment('プロフィール名');
-            $table->string('image')->comment('プロフィール画像');
+            $table->string('image')->nullable()->comment('プロフィール画像');
             $table->timestamps();
         });
     }
