@@ -6,7 +6,6 @@ use App\Http\Requests\Profile\StoreRequest;
 use App\Models\Profile;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
@@ -22,7 +21,13 @@ class ProfileController extends Controller
           ]);
         }
 
-        return response()->json($profile);
+        $imagePath = Storage::disk('s3')->url(config('filesystems.disks.s3.bucket').'/'.$profile->image);
+
+        return response()->json([
+          'id' => $profile->id,
+          'name' => $profile->name,
+          'image' => $imagePath
+        ]);
     }
 
     public function store(StoreRequest $request)
@@ -52,12 +57,11 @@ class ProfileController extends Controller
         $fileName = Str::uuid().'.'.$extension;
 
         $uploadedFilePath = Storage::disk('s3')->putFile('images', $request->image, $fileName);
-        $url = Storage::disk('s3')->url(config('filesystems.disks.s3.bucket').'/'.$uploadedFilePath);
 
         Profile::create([
           'user_id' => $userId,
           'name' => $request->name,
-          'image' => $url,
+          'image' => $uploadedFilePath,
         ]);
 
         return response()->json([
