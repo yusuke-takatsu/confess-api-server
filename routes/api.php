@@ -22,6 +22,7 @@ Route::middleware('auth:user')->group(function() {
   Route::prefix('/profiles')->name('profile.')->group(function() {
     Route::get('/{id}', [ProfileController::class, 'show'])->name('show');
     Route::post('/', [ProfileController::class, 'store'])->name('store');
+    Route::post('/update', [ProfileController::class, 'update'])->name('update');
   });
 });
 
