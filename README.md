@@ -31,3 +31,7 @@ docker compose up -d
 ```
 docker compose exec -it app bin/bash
 ```
+
+## ER図
+
+![confess drawio](https://github.com/user-attachments/assets/3dee18a9-c787-41ed-ae89-1615cd9b235a)
