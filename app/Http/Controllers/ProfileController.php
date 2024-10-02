@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\Profile\StoreRequest;
+use App\Http\Requests\Profile\UpdateRequest;
 use App\Models\Profile;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -66,6 +67,48 @@ class ProfileController extends Controller
 
         return response()->json([
           'message' => 'プロフィール情報を登録しました。'
+        ]);
+    }
+
+    public function update(UpdateRequest $request)
+    {
+        $profile = Profile::find($request->id);
+
+        if (is_null($profile)) {
+          return response()->json([
+              'message' => '更新対象のプロフィールが存在しません。'
+          ]);
+        }
+
+        $oldImage = $profile->image;
+
+        if (is_null($request->image)) {
+          $profile->update([
+              'name' => $request->name,
+              'image' => null,
+          ]);
+
+          $oldImage && Storage::disk('s3')->delete($oldImage);
+
+          return response()->json([
+            'message' => 'プロフィール情報を更新しました。'
+          ]);
+        }
+
+        $extension = $request->image->extension();
+        $fileName = Str::uuid().'.'.$extension;
+
+        $uploadedFilePath = Storage::disk('s3')->putFile('images', $request->image, $fileName);
+
+        $profile->update([
+          'name' => $request->name,
+          'image' => $uploadedFilePath,
+        ]);
+
+        $oldImage && Storage::disk('s3')->delete($oldImage);
+
+        return response()->json([
+          'message' => 'プロフィール情報を更新しました。'
         ]);
     }
 }
