@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\ForgiveController;
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\User\AuthController;
@@ -31,6 +32,10 @@ Route::middleware('auth:user')->group(function() {
     Route::post('/register', [PostController::class, 'store'])->name('store');
     Route::post('/update', [PostController::class, 'update'])->name('update');
     Route::delete('/delete', [PostController::class, 'delete'])->name('delete');
+  });
+
+  Route::prefix('/forgives')->name('forgive.')->group(function() {
+    Route::post('/toggle', [ForgiveController::class, 'toggle'])->name('toggle');
   });
 });
 
