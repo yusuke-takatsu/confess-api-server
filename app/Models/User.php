@@ -51,4 +51,9 @@ class User extends Authenticatable
     {
         return $this->hasOne(Profile::class);
     }
+
+    public function forgives()
+    {
+        return $this->belongsToMany(Post::class, 'forgives')->withTimestamps();
+    }
 }
