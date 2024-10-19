@@ -13,6 +13,9 @@ class PostController extends Controller
 {
   public function index(IndexRequest $request)
   {
+    /** @var User */
+    $user = Auth::user();
+
     // リクエストからパラメータを取得
     $searchWord = $request->input('search_word');
     $categoryId = $request->input('category_id');
@@ -20,6 +23,10 @@ class PostController extends Controller
     $sortType = $request->input('sort_type');
 
     $query = Post::select('posts.*', 'users.name', 'users.image')
+      ->withCount('forgives as like_count') // 「いいね」の総数を取得
+      ->with(['forgives' => function($query) use ($user) {
+          $query->where('user_id', $user->id);
+      }])
       ->join('users', 'posts.user_id', '=', 'users.id');
 
     // search_wordが存在する場合の条件追加
@@ -42,6 +49,13 @@ class PostController extends Controller
 
     // get()で実際にデータを取得
     $posts = $query->get();
+
+    // isNotEmptyでいいねしている投稿があれば、trueを返却
+    $posts->map(function ($post) {
+        $post->is_like = $post->forgives->isNotEmpty();
+        unset($post->forgives);
+        return $post;
+    });
 
     return response()->json($posts);
   }
