@@ -40,6 +40,8 @@ class IndexTest extends TestCase
           'updated_at' => $post->updated_at->toJSON(),
           'name' => $user->name,
           'image' => $user->image,
+          'like_count' => 0,
+          'is_like' => false,
         ]
       ]);
   }
@@ -70,6 +72,8 @@ class IndexTest extends TestCase
           'updated_at' => $post->updated_at->toJSON(),
           'name' => $user->name,
           'image' => $user->image,
+          'like_count' => 0,
+          'is_like' => false,
         ]
       ]);
   }
